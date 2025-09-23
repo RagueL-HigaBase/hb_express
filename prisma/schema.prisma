@@ -127,6 +127,7 @@ model UserSystemCredentials {
 
 model UserSession {
     id                          String              @id  @default(uuid())   @map("cr_uuid")
+    userId                      String              @unique                 @map("cr_useruuid")
     sessionHash                 String              @unique                 @map("cr_session")
     sessionPin                  String              @unique                 @map("cr_pin")
     created                     DateTime            @default(now())         @map("cr_created")

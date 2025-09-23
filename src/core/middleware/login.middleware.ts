@@ -1,9 +1,10 @@
 import type { NextFunction, Request, Response } from "express";
+import { sessionServiceUpdate } from "../services/read/session.service.js";
 
 export async function sessionMiddleware(req: Request, res: Response, next: NextFunction) {
-    const { session } = req.cookies;
-    if (session) return res.status(401).json({ ok: false, message: })
-    const hasSession = await 
+    const { token } = req.cookies;
+    if (token) return res.status(401).json({ ok: false, message: "" })
+    const hasSession = await sessionServiceUpdate(token);
 
     next();
 }
