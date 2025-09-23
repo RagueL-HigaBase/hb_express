@@ -1,0 +1,1 @@
+{"version":3,"file":"mock.controller.js","sourceRoot":"","sources":["../../../src/mock/controller/mock.controller.ts"],"names":[],"mappings":"AAEA,MAAM,CAAC,KAAK,UAAU,cAAc,CAAC,GAAY,EAAE,GAAa,EAAE,GAAwB;IACtF,GAAG,CAAC,MAAM,CAAC,GAAG,CAAC,CAAC,IAAI,CAAC;QACjB,EAAE,EAAE,KAAK;QACT,OAAO,EAAE,wBAAwB;KACpC,CAAC,CAAA;AACN,CAAC"}

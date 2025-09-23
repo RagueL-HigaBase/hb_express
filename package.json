@@ -6,20 +6,37 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "tsc",
-        "start": "node ./dist/app.js"
+        "start": "node ./dist/app.js",
+        "prisma:migrate": "npx prisma migrate dev",
+        "prisma:studio": "npx prisma studio",
+        "prisma:status": "npx prisma migrate status",
+        "prisma:pull": "npx prisma db pull",
+        "prisma:clean": "rimraf prisma/migrations node_modules/.prisma",
+        "prisma:reset:db": "npx prisma migrate reset --force",
+        "prisma:generate": "npx prisma generate",
+        "prisma:reset-all:confirm": "npm run prisma:clean && npm run prisma:reset:db && npm run prisma:migrate && npm run prisma:generate"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "description": "",
     "dependencies": {
+        "@prisma/client": "^6.16.2",
+        "@types/bcrypt": "^6.0.0",
+        "@types/morgan": "^1.9.10",
+        "bcrypt": "^6.0.0",
         "dotenv": "^17.2.2",
-        "express": "^5.1.0"
+        "express": "^5.1.0",
+        "iso-3166-1": "^2.1.1",
+        "morgan": "^1.10.1",
+        "zod": "^4.1.11"
     },
     "devDependencies": {
         "@types/express": "^5.0.3",
         "@types/node": "^24.5.2",
+        "prisma": "^6.16.2",
         "ts-node-dev": "^2.0.0",
+        "tsx": "^4.20.5",
         "typescript": "^5.9.2"
     }
 }

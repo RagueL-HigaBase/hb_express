@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas = ["core"]
+}
+
+
+model User {
+    id                          String      @id @default(uuid())            @map("cr_uuid")
+    email                       String      @unique                         @map("cr_email")
+    password                    String                                      @map("cr_password")
+    created                     DateTime    @default(now())                 @map("cr_created")
+    updated                     DateTime    @default(now())                 @map("cr_updated")
+    //Relations
+    identity                    UserIdentity?
+    permanent                   UserPermanentAddress?
+    current                     UserCurrentAddress?
+    credentials                 UserSystemCredentials?
+    @@schema("core")
+    @@map("user")
+}
+
+enum GENDER {
+    MALE
+    FEMALE
+    UNKNOWN
+    @@schema("core")
+}
+model UserIdentity {
+    id                          String      @unique                         @map("cr_uuid")
+    firstName                   String?                                     @map("cr_firstname")
+    lastName                    String?                                     @map("cr_lastname")
+    middleName                  String?                                     @map("cr_middlename")
+    gender                      GENDER      @default(UNKNOWN)               @map("cr_gender")
+    birthDate                   DateTime?                                   @map("cr_birthdate")
+    nationality                 Json?                                       @map("cr_nationality")
+    placeOfBirth                Json?                                       @map("cr_placeofbirth")
+    updated                     DateTime?                                   @map("cr_updated")
+    //Relations
+    user                        User?      @relation(fields: [id], references: [id])
+    @@schema("core")
+    @@map("user_identity")
+}
+
+model UserPermanentAddress {
+    id                          String      @unique                         @map("cr_uuid")
+    country                     String?                                     @map("cr_pr_country")
+    city                        String?                                     @map("cr_pr_city")
+    street                      String?                                     @map("cr_pr_street")
+    postCode                    String?                                     @map("cr_pr_postcode")
+    houseNumber                 String?                                     @map("cr_pr_housenumber") 
+    aditional                   String?                                     @map("cr_pr_aditional")
+    latitude                    String?                                     @map("cr_pr_latitude")
+    longitude                   String?                                     @map("cr_pr_longitude ")    
+    updated                     DateTime?                                   @map("cr_pr_updated") 
+    //Relations
+    user                        User?       @relation(fields: [id], references: [id])
+    @@schema("core")
+    @@map("user_permanent_address")
+}
+
+model UserCurrentAddress {
+    id                          String      @unique                         @map("cr_uuid")
+    country                     String?                                     @map("cr_cu_country")
+    city                        String?                                     @map("cr_cu_city")
+    street                      String?                                     @map("cr_cu_street")
+    postCode                    String?                                     @map("cr_cu_postcode")
+    houseNumber                 String?                                     @map("cr_cu_housenumber") 
+    aditional                   String?                                     @map("cr_cu_aditional")
+    latitude                    String?                                     @map("cr_cu_latitude")
+    longitude                   String?                                     @map("cr_cu_longitude ")    
+    updated                     DateTime?                                   @map("cr_cu_updated") 
+    //Relations
+    user                        User?       @relation(fields: [id], references: [id])
+    @@schema("core")
+    @@map("user_current_address")
+}
+
+enum ROLE {
+    GUEST
+    USER
+    MODERATOR
+    ADMIN
+    SUPERADMIN
+    @@schema("core")
+}
+
+enum SYSTEM_STATUS {
+    PENDING
+    INVITED
+    ACTIVE
+    LOCKED
+    SUSPENDED
+    DEACTIVATED
+    BANNED
+    DELETED
+    @@schema("core")
+}
+
+enum EMPLOYMENT_STATUS {
+    SEEKING      
+    NOT_SEEKING   
+    EMPLOYED     
+    UNEMPLOYED
+    OPEN
+    FREELANCE
+    SELF_EMPLOYED
+    UNKNOWN
+    @@schema("core")
+}
+
+model UserSystemCredentials {
+    id                          String              @unique                 @map("cr_uuid")
+    role                        ROLE                @default(USER)          @map("cr_role")
+    status                      SYSTEM_STATUS       @default(PENDING)       @map("cr_status")
+    employment                  EMPLOYMENT_STATUS   @default(UNKNOWN)       @map("cr_emloyment")
+    updated                     DateTime?                                   @map("cr_updated")
+
+    user                        User?               @relation(fields: [id], references: [id])
+    @@schema("core")    
+    @@map("user_system_credentials")
+}
+
+model UserSession {
+    id                          String              @id  @default(uuid())   @map("cr_uuid")
+    sessionHash                 String              @unique                 @map("cr_session")
+    sessionPin                  String              @unique                 @map("cr_pin")
+    created                     DateTime            @default(now())         @map("cr_created")
+    updated                     DateTime?                                   @map("cr_updated")
+    expired                     DateTime            @default(now())         @map("cr_expired")
+    @@schema("core")
+    @@map("user_session")
+}

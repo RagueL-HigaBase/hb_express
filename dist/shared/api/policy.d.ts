@@ -1,0 +1,10 @@
+export type ErrorPolicy = {
+    ok: false;
+    message: string;
+};
+export type SuccessPolicy<T> = {
+    ok: true;
+    data: T;
+};
+export type ApiPolicy<T> = ErrorPolicy | SuccessPolicy<T>;
+//# sourceMappingURL=policy.d.ts.map
