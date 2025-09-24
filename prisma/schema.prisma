@@ -133,6 +133,8 @@ model UserSession {
     pinElapsed                  DateTime                                    @map("cr_pin_elapsed")
     created                     DateTime            @default(now())         @map("cr_created")
     updated                     DateTime?                                   @map("cr_updated")
+    revoked                     Boolean             @default(false)         @map("cr_revoke")
+    revokedAt                   DateTime?                                   @map("cr_revoked_at")
     @@schema("core")
     @@map("user_session")
 }

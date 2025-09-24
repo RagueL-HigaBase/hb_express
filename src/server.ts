@@ -16,8 +16,8 @@ export async function runServer() {
     ];
 
     app.use(cors({
-        origin: DEV_ORIGINS,   // строго перечисляем, не ставим "*"
-        credentials: true,     // чтобы работали куки/авторизация
+        origin: DEV_ORIGINS, 
+        credentials: true,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token"],
         exposedHeaders: ["Content-Length", "X-Request-Id"],

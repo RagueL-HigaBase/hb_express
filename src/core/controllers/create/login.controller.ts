@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
 import { validateLogin } from "../../validators/login.validator.js";
 import { zodError } from "../../../shared/messages/zod.js";
-import { loginServiceCreate } from "../../services/read/login.service.js";
+import { loginServiceCreate } from "../../services/create/login.service.js";
 
-export async function loginController(req: Request, res: Response) {
+export async function loginControllerCreate(req: Request, res: Response) {
     const { password, email, pin } = req.body;
 
     const v = validateLogin.safeParse({ email, password, pin });

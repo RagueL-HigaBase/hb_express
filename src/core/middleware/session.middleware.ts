@@ -1,11 +1,13 @@
 import type { NextFunction, Request, Response } from "express";
-import { sessionServiceRead } from "../services/read/session.service.js";
+import { sessionServicePatch } from "../services/update/session.service.js";
+import { sessionActive } from "../../shared/messages/server.js";
 
 export async function sessionMiddleware(req: Request, res: Response, next: NextFunction) {
     const { session } = req.cookies;
-    console.log(session);
-    // const { token } = req.cookies;
-    // if (token) return res.status(401).json({ ok: false, message: "" })
-    // const hasSession = await sessionServiceRead(token);
-    next();
+    if (!session || typeof session !== 'string') return next();
+    const r = await sessionServicePatch(session);
+
+    if (r.ok) return res.status(200).json({ ok: true, message: sessionActive});
+    res.clearCookie("session", { httpOnly: true, path: '/',  sameSite: 'lax',  secure: true, })
+    return next();
 }

@@ -78,12 +78,13 @@ CREATE TABLE "core"."user_system_credentials" (
 CREATE TABLE "core"."user_session" (
     "cr_uuid" TEXT NOT NULL,
     "cr_useruuid" TEXT NOT NULL,
-    "cr_session_has" TEXT NOT NULL,
     "cr_session_elapsed" TIMESTAMP(3) NOT NULL,
     "cr_pin_hash" TEXT NOT NULL,
     "cr_pin_elapsed" TIMESTAMP(3) NOT NULL,
     "cr_created" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "cr_updated" TIMESTAMP(3),
+    "cr_revoke" BOOLEAN NOT NULL DEFAULT false,
+    "cr_revoked_at" TIMESTAMP(3),
 
     CONSTRAINT "user_session_pkey" PRIMARY KEY ("cr_uuid")
 );
@@ -102,9 +103,6 @@ CREATE UNIQUE INDEX "user_current_address_cr_uuid_key" ON "core"."user_current_a
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_system_credentials_cr_uuid_key" ON "core"."user_system_credentials"("cr_uuid");
-
--- CreateIndex
-CREATE UNIQUE INDEX "user_session_cr_session_has_key" ON "core"."user_session"("cr_session_has");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_session_cr_pin_hash_key" ON "core"."user_session"("cr_pin_hash");

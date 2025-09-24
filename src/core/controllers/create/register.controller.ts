@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { registerValidator } from "../../validators/register.validator.js";
-import { registerServiceCreate } from "../../services/post/register.service.js";
+import { registerServiceCreate } from "../../services/create/register.service.js";
 import { zodError } from "../../../shared/messages/zod.js";
 
 export async function registerController(req: Request, res: Response) {
