@@ -1,4 +1,6 @@
+import "dotenv/config";
 import type { ApiPolicy } from "../../../shared/api/policy.js";
+import { generateSessionToken, IdHash } from "../../../shared/cipher/session.cipher.js";
 import { strinEncrypt, stringDecrypt } from "../../../shared/cipher/string.cipher.js";
 import { prisma } from "../../../shared/lib/prisma.js";
 import { passNotMatch, serverError, userNotExist } from "../../../shared/messages/server.js";
@@ -7,18 +9,35 @@ import type { ValidateLogin } from "../../validators/login.validator.js";
 
 export async function loginServiceCreate(v: ValidateLogin): Promise<ApiPolicy<PublicSelectUser>> {
     try {
-        const isExist = await prisma.user.findUnique({ where: { email: v.email }, select: { id: true, password: true } });
+
+        const isExist = await prisma.user.findUnique({ where: { email: v.email }});
         if (!isExist) return { ok: false, message: userNotExist};
 
         const passwordDecrypt = await stringDecrypt(v.password, isExist.password );
         if (!passwordDecrypt) return { ok: false, message: passNotMatch };
 
-        const sessionPinHas = await strinEncrypt(v.pin);
-            
-        const sessionUuid = crypto.randomUUID();
-        const sessionHash = await strinEncrypt(sessionUuid);
+        // Generating a unique one-time session token
+        const sessionToken = generateSessionToken();
 
-        return { ok: true, data: { email: isExist.id }};
+        // Generating a unique one-time session identifier (UUID)
+        const sessionId = IdHash(sessionToken);
+
+        // Encrypting the one-time session PIN provided by the user //
+        const sessionPinHas = await strinEncrypt(v.pin);
+
+        // Creates a Date object with the current date and time and assigns it to the variable
+        const now = new Date();
+
+        const initializeSession = await prisma.userSession.create({
+            data: {
+                id: sessionId,
+                userId:isExist.id,
+                sessionElapsed: new Date(now.getTime() + 3 * 60 * 60 * 1000),
+                pinHash: sessionPinHas,
+                pinElapsed: new Date(now.getTime() + 15 * 60 * 1000)
+            }
+        });
+        return { ok: true, data: { token: sessionToken }};
 
     } catch(e) {
         return { ok: false, message: serverError }

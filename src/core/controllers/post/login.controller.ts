@@ -10,4 +10,15 @@ export async function loginController(req: Request, res: Response) {
     if (!v.success) return res.status(401).json({ ok: false, message: zodError })
 
     const isExist = await loginServiceCreate(v.data);
+    if (!isExist.ok) return res.status(401).json({ ...isExist })
+    
+        return res.status(201)
+        .cookie("session", isExist.data.token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            path: "/",
+            maxAge: 3 * 60 * 60 * 1000,
+        })
+        .json({ ...isExist })
 }

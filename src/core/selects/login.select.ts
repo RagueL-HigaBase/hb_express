@@ -1,3 +1,3 @@
 export type PublicSelectUser = {
-    email: string,
+    token: string,
 }

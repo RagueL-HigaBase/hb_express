@@ -1,10 +1,11 @@
 import { strinEncrypt } from "../../../shared/cipher/string.cipher.js";
 import { prisma } from "../../../shared/lib/prisma.js";
-export async function registerService(v) {
+import { serverError, userExist } from "../../../shared/messages/server.js";
+export async function registerServiceCreate(v) {
     try {
         const isExist = await prisma.user.findUnique({ where: { email: v.email } });
         if (isExist)
-            return { ok: false, message: "system.failed.create" };
+            return { ok: false, message: userExist };
         const encryptPassword = await strinEncrypt(v.password);
         const createCollection = await prisma.$transaction(async (tx) => {
             const createUser = await tx.user.create({
@@ -26,7 +27,7 @@ export async function registerService(v) {
         return { ok: true, data: createCollection };
     }
     catch (e) {
-        return { ok: false, message: "server.error.message" };
+        return { ok: false, message: serverError };
     }
 }
 //# sourceMappingURL=register.service.js.map

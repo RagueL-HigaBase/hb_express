@@ -1,5 +1,5 @@
 import { registerValidator } from "../../validators/register.validator.js";
-import { registerService } from "../../services/post/register.service.js";
+import { registerServiceCreate } from "../../services/post/register.service.js";
 import { zodError } from "../../../shared/messages/zod.js";
 export async function registerController(req, res) {
     const { email, password, confirm } = req.body;
@@ -10,7 +10,7 @@ export async function registerController(req, res) {
             message: zodError
         });
     }
-    const p = await registerService(v.data);
+    const p = await registerServiceCreate(v.data);
     if (!p.ok)
         return res.status(401).json({ ...p });
     return res.status(200).json({ ...p });

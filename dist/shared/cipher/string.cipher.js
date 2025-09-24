@@ -5,7 +5,7 @@ export async function strinEncrypt(password) {
     return await bcrypt.hash(password, saltRounds);
 }
 /** Checks if a plain-text password matches the given bcrypt hash. */
-export async function stringDecrupt(password, hash) {
+export async function stringDecrypt(password, hash) {
     return await bcrypt.compare(password, hash);
 }
 //# sourceMappingURL=string.cipher.js.map

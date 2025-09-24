@@ -32,13 +32,13 @@ enum GENDER {
 }
 model UserIdentity {
     id                          String      @unique                         @map("cr_uuid")
-    firstName                   String?                                     @map("cr_firstname")
-    lastName                    String?                                     @map("cr_lastname")
-    middleName                  String?                                     @map("cr_middlename")
+    firstName                   String?                                     @map("cr_first_name")
+    lastName                    String?                                     @map("cr_last_name")
+    middleName                  String?                                     @map("cr_middle_name")
     gender                      GENDER      @default(UNKNOWN)               @map("cr_gender")
     birthDate                   DateTime?                                   @map("cr_birthdate")
     nationality                 Json?                                       @map("cr_nationality")
-    placeOfBirth                Json?                                       @map("cr_placeofbirth")
+    placeOfBirth                Json?                                       @map("cr_place_of_birth")
     updated                     DateTime?                                   @map("cr_updated")
     //Relations
     user                        User?      @relation(fields: [id], references: [id])
@@ -51,8 +51,8 @@ model UserPermanentAddress {
     country                     String?                                     @map("cr_pr_country")
     city                        String?                                     @map("cr_pr_city")
     street                      String?                                     @map("cr_pr_street")
-    postCode                    String?                                     @map("cr_pr_postcode")
-    houseNumber                 String?                                     @map("cr_pr_housenumber") 
+    postCode                    String?                                     @map("cr_pr_post_code")
+    houseNumber                 String?                                     @map("cr_pr_house_number") 
     aditional                   String?                                     @map("cr_pr_aditional")
     latitude                    String?                                     @map("cr_pr_latitude")
     longitude                   String?                                     @map("cr_pr_longitude ")    
@@ -69,7 +69,7 @@ model UserCurrentAddress {
     city                        String?                                     @map("cr_cu_city")
     street                      String?                                     @map("cr_cu_street")
     postCode                    String?                                     @map("cr_cu_postcode")
-    houseNumber                 String?                                     @map("cr_cu_housenumber") 
+    houseNumber                 String?                                     @map("cr_cu_house_number") 
     aditional                   String?                                     @map("cr_cu_aditional")
     latitude                    String?                                     @map("cr_cu_latitude")
     longitude                   String?                                     @map("cr_cu_longitude ")    
@@ -126,13 +126,13 @@ model UserSystemCredentials {
 }
 
 model UserSession {
-    id                          String              @id  @default(uuid())   @map("cr_uuid")
-    userId                      String              @unique                 @map("cr_useruuid")
-    sessionHash                 String              @unique                 @map("cr_session")
-    sessionPin                  String              @unique                 @map("cr_pin")
+    id                          String              @id                     @map("cr_uuid")
+    userId                      String                                      @map("cr_useruuid")
+    sessionElapsed              DateTime                                    @map("cr_session_elapsed")
+    pinHash                     String              @unique                 @map("cr_pin_hash")
+    pinElapsed                  DateTime                                    @map("cr_pin_elapsed")
     created                     DateTime            @default(now())         @map("cr_created")
     updated                     DateTime?                                   @map("cr_updated")
-    expired                     DateTime            @default(now())         @map("cr_expired")
     @@schema("core")
     @@map("user_session")
 }
