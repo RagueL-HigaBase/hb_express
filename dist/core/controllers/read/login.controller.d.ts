@@ -1,3 +1,3 @@
-import type { NextFunction, Request, Response } from "express";
-export declare function loginControllerRead(req: Request, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>> | undefined>;
+import type { Request, Response } from "express";
+export declare function loginControllerLayer(req: Request, res: Response): Promise<Response<any, Record<string, any>>>;
 //# sourceMappingURL=login.controller.d.ts.map

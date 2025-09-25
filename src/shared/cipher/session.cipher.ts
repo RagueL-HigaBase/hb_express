@@ -1,20 +1,41 @@
 import crypto from "crypto";
 
 
+/**
+ * RU: Преобразует буфер в base64url: заменяет +/ на -_ и убирает =; безопасно для URL и куки.
+ * 
+ * EN: Converts a Buffer to base64url: replaces +/ with -_ and strips =; safe for URLs and cookies.
+ * 
+ * NL: Zet een Buffer om naar base64url: vervangt +/ door -_ en verwijdert =; veilig voor URL's en cookies.
+ * 
+ * @param buf Буфер с данными / Data buffer / Gegevensbuffer
+ * @returns base64url-строка без паддинга / base64url string / base64url-tekenreeks
+ */
 export function toB64Url(buf: Buffer): string {
     return buf.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
 
-/** Сырой случайный токен: 32 байта → base64url */
+/**
+ * RU: Создаёт сырой 32-байтный токен сессии и кодирует его как base64url для безопасной передачи/хранения.
+ * EN: Creates a raw 32-byte session token and encodes it as base64url for safe transport/storage.
+ * NL: Maakt een ruwe sessietoken van 32 bytes en codeert deze als base64url voor veilige overdracht/opslag.
+ * @returns base64url-токен сессии / base64url session token / base64url-sessietoken
+ */
 export function generateSessionToken(): string {
     return toB64Url(crypto.randomBytes(32));
 }
 
-/** HMAC-SHA256(secret, token) → base64url (рекомендую) */
+/**
+ * RU: HMAC-SHA256(secret, token) → base64url; стабильный идентификатор для поиска и индексации в БД.
+ * EN: HMAC-SHA256(secret, token) → base64url; stable identifier for database lookup and indexing.
+ * NL: HMAC-SHA256(secret, token) → base64url; stabiele identificator voor DB-opzoeking en indexering.
+ * @param token Токен из generateSessionToken / Token from generateSessionToken / Token van generateSessionToken
+ * @returns Хеш-идентификатор (base64url) / Hash identifier (base64url) / Hash-identificator (base64url)
+ * @env SESSION_HMAC_SECRET — секрет HMAC; при отсутствии используется дефолтное значение для разработки.
+ */
 export function IdHash(token: string): string {
     const SECRET: string | undefined = process.env.SESSION_HMAC_SECRET || "9eJKDi9qHcQy4mS5tQOM3lRkqR8S3gq0xv3wGdE3b9k";
     const mac = crypto.createHmac("sha256", Buffer.from(SECRET, "utf8"));
     mac.update(token, "utf8");
     return toB64Url(mac.digest());
 }
-

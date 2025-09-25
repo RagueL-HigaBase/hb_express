@@ -1,5 +1,2 @@
-import z from "zod";
-export declare const validateToken: z.ZodObject<{
-    token: z.ZodString;
-}, z.z.core.$strip>;
+export {};
 //# sourceMappingURL=toke.validator.d.ts.map
