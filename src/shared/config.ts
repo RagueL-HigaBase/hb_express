@@ -1,7 +1,7 @@
 // RU: Имя сессионной куки. Префикс __Host- делает её «host-only»: требует Secure, Path="/", без Domain.
 // EN: Session cookie name. The __Host- prefix makes it host-only: requires Secure, Path="/", and no Domain.
 // NL: Naam van de sessiecookie. Het __Host-voorvoegsel maakt haar host-only: vereist Secure, Path="/", en geen Domain.
-export const COOKIE_NAME = '__Host-session' as const;
+export const COOKIE_NAME = 'session' as const;
 
 // RU: Путь куки. Для __Host- должен быть строго "/".
 // EN: Cookie path. For __Host- it must be exactly "/".
@@ -28,7 +28,7 @@ export const SESSION_TTL_MS = 3 * 60 * 60 * 1000;
 // NL: TTL van de PIN in milliseconden (15 minuten). Na verloop is opnieuw PIN-bevestiging nodig.
 export const PIN_TTL_MS = 15 * 60 * 1000;
 
-
+export const tesData = '__Host-session';
 /**
  * RU: Общие атрибуты куки, которые должны совпадать при установке и удалении.
  * EN: Common cookie attributes that must match for both set and clear operations.

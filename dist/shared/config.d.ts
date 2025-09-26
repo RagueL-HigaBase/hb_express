@@ -1,9 +1,10 @@
-export declare const COOKIE_NAME: "__Host-session";
+export declare const COOKIE_NAME: "session";
 export declare const COOKIE_PATH: "/";
 export declare const COOKIE_SAMESITE: "lax";
 export declare const COOKIE_SECURE = true;
 export declare const SESSION_TTL_MS: number;
 export declare const PIN_TTL_MS: number;
+export declare const tesData = "__Host-session";
 /**
  * RU: Общие атрибуты куки, которые должны совпадать при установке и удалении.
  * EN: Common cookie attributes that must match for both set and clear operations.

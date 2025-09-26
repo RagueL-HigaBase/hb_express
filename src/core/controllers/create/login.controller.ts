@@ -39,6 +39,8 @@ export async function loginControllerCreate(req: Request, res: Response) {
     // EN: On success — set an httpOnly session cookie with the token and respond 201 with isExist data.
     // NL: Bij succes — zet een httpOnly session-cookie met de token en antwoord 201 met isExist-gegevens.
     return res.status(200)
-        .cookie(COOKIE_NAME, SET_COOKIE_OPTS)
-        .json({ ...isExist })
+        .cookie(COOKIE_NAME, isExist.data.token, SET_COOKIE_OPTS)
+        .json({ ok:isExist.ok, data: {
+            message: isExist.data.message
+        }})
 }

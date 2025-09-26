@@ -1,6 +1,8 @@
 export type ErrorPolicy = {
     ok: false;
-    message: string;
+    data: {
+        message: string;
+    };
 };
 export type SuccessPolicy<T> = {
     ok: true;

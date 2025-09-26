@@ -2,9 +2,9 @@ import type { ApiPolicy } from "../../../shared/api/policy.js";
 import { IdHash } from "../../../shared/cipher/session.cipher.js";
 import { prisma } from "../../../shared/lib/prisma.js";
 import { serverError, sessionUnexist } from "../../../shared/messages/server.js";
-import type { ServerSelectPin } from "../../selects/pin.select.js";
+export type ReturnPolicyPinServicePaper = { pinElapsed: boolean, id: string };
 
-export async function pinServicePaper(session: string): Promise<ApiPolicy<ServerSelectPin>> {
+export async function pinServicePaper(session: string): Promise<ApiPolicy<ReturnPolicyPinServicePaper>> {
     try {
         
         // RU: Строим детерминированный идентификатор сессии из токена (HMAC) для поиска в БД.
@@ -17,7 +17,7 @@ export async function pinServicePaper(session: string): Promise<ApiPolicy<Server
         // NL: Zoek de sessie op hash; indien niet gevonden — melden dat de sessie niet bestaat.
         const s = await prisma.userSession.findUnique({ where: { id: sessionIdHash }});
 
-        if (!s) return { ok: false, message: sessionUnexist };
+        if (!s) return { ok: false, data: { message: sessionUnexist } };
 
         // RU: Если срок сессии истёк ИЛИ она уже отозвана — помечаем revoked и возвращаем «сессии нет».
         // EN: If the session is expired OR already revoked — mark as revoked and return “no session”.
@@ -30,7 +30,7 @@ export async function pinServicePaper(session: string): Promise<ApiPolicy<Server
                 where: { id: sessionIdHash },
                 data: { revoked: true, revokedAt: new Date() }
             });
-            return { ok: false, message: sessionUnexist };
+            return { ok: false, data: { message: sessionUnexist } };
         };
 
         // RU: Если PIN истёк — сообщаем фронту, что требуется повторное подтверждение PIN.
@@ -48,6 +48,6 @@ export async function pinServicePaper(session: string): Promise<ApiPolicy<Server
         // RU: Возвращает общий ответ об ошибке сервера: ok=false и сообщение serverError.
         // EN: Returns a generic server error response: ok=false with the serverError message.
         // NL: Geeft een algemene serverfout terug: ok=false met het bericht serverError.
-        return { ok: false, message: serverError };
+        return { ok: false, data: { message: serverError } };
     }
 }

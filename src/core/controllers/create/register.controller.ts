@@ -19,7 +19,9 @@ export async function registerControllerCreate(req: Request, res: Response) {
     if (!v.success) {
         return res.status(401).json({
             ok: false,
-            message: zodError
+            data: {
+                message: zodError
+            }
         })
     }
     

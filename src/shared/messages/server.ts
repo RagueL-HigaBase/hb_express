@@ -15,3 +15,12 @@ export const sessionActive = "server.success.session"
 export const pinError = "server.warning.pin"
 
 export const pinExtended = "server.success.pin"
+
+
+export const credentialChanged = "system.success.credentials"
+
+export const credentialError = "system.error.credentials"
+
+export const serverWelcomeLogin = "server.login.welcome"
+
+export const validationFailed = "validation.message.failed"

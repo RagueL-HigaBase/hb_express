@@ -46,7 +46,6 @@ export async function pinServiceUpdate(req: Request, res: Response) {
 
 
     const extend = await pinServiceExtend(sessionId, pin);
-    console.log(extend);
 
     if (!extend.ok){ 
         res.clearCookie('session', { httpOnly: true, path: '/', sameSite: 'lax', secure: true });

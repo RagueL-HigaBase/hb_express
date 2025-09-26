@@ -1,14 +1,14 @@
 import "dotenv/config";
 import type { ApiPolicy } from "../../../shared/api/policy.js";
 import { generateSessionToken, IdHash } from "../../../shared/cipher/session.cipher.js";
-import { strinEncrypt, stringDecrypt } from "../../../shared/cipher/string.cipher.js";
+import { stringEncrypt, stringDecrypt } from "../../../shared/cipher/string.cipher.js";
 import { prisma } from "../../../shared/lib/prisma.js";
-import { passNotMatch, serverError, userNotExist } from "../../../shared/messages/server.js";
-import type { PublicSelectUser } from "../../selects/login.select.js";
+import { passNotMatch, serverError, serverWelcomeLogin, userNotExist } from "../../../shared/messages/server.js";
 import type { ValidateLogin } from "../../validators/login.validator.js";
 import { PIN_TTL_MS, SESSION_TTL_MS } from "../../../shared/config.js";
+export type ReturnPolicyLoginServiceCreate = { message: string, token: string }
 
-export async function loginServiceCreate(v: ValidateLogin): Promise<ApiPolicy<PublicSelectUser>> {
+export async function loginServiceCreate(v: ValidateLogin): Promise<ApiPolicy<ReturnPolicyLoginServiceCreate>> {
     try {
         // RU: Ищем пользователя по уникальному email через Prisma; вернёт запись или null.
         // EN: Look up a user by unique email via Prisma; returns the record or null.
@@ -18,7 +18,7 @@ export async function loginServiceCreate(v: ValidateLogin): Promise<ApiPolicy<Pu
         // RU: Если пользователь не найден — вернуть ошибку userNotExist (ранний выход).
         // EN: If no user is found — return error userNotExist (early return).
         // NL: Als geen gebruiker is gevonden — fout userNotExist teruggeven (vroege return).
-        if (!isExist) return { ok: false, message: userNotExist};
+        if (!isExist) return { ok: false, data: { message: userNotExist} };
 
         // RU: Сравниваем введённый пароль с bcrypt-хешем из БД (stringDecrypt → compare).
         // EN: Compare the supplied password with the stored bcrypt hash (stringDecrypt → compare).
@@ -28,7 +28,7 @@ export async function loginServiceCreate(v: ValidateLogin): Promise<ApiPolicy<Pu
         // RU: При несовпадении пароля — вернуть ошибку passNotMatch.
         // EN: On mismatch — return the passNotMatch error.
         // NL: Bij mismatch — fout passNotMatch teruggeven.
-        if (!passwordDecrypt) return { ok: false, message: passNotMatch };
+        if (!passwordDecrypt) return { ok: false, data: { message: passNotMatch } };
 
         // RU: Генерирует одноразовый токен сессии (32 байта, base64url) для хранения в httpOnly-куке.
         // EN: Generates a one-time session token (32 bytes, base64url) for storage in an httpOnly cookie.
@@ -43,7 +43,7 @@ export async function loginServiceCreate(v: ValidateLogin): Promise<ApiPolicy<Pu
         // RU: Хеширует одноразовый PIN пользователя с помощью bcrypt для безопасного хранения (сравнение без восстановления).
         // EN: Hashes the user’s one-time PIN with bcrypt for safe storage (comparison without reversal).
         // NL: Hasht de eenmalige PIN van de gebruiker met bcrypt voor veilige opslag (vergelijking zonder omkering).
-        const encryptPin = await strinEncrypt(v.pin);
+        const encryptPin = await stringEncrypt(v.pin);
 
         // RU: Фиксирует текущее время (timestamp) для расчётов issuedAt/истечения срока.
         // EN: Captures the current timestamp for issuedAt/expiry calculations.
@@ -71,12 +71,12 @@ export async function loginServiceCreate(v: ValidateLogin): Promise<ApiPolicy<Pu
         // RU: Возвращает успех с одноразовым токеном sessionToken — клиент сохранит его в httpOnly-куке.
         // EN: Returns success with the one-time sessionToken — the client will store it in an httpOnly cookie.
         // NL: Geeft succes terug met de eenmalige sessionToken — de client slaat deze op in een httpOnly-cookie.
-        return { ok: true, data: { token: sessionToken }};
+        return { ok: true, data: { message: serverWelcomeLogin, token: sessionToken }};
 
     } catch(e) {
         // RU: Возвращает общий ответ об ошибке сервера: ok=false и сообщение serverError.
         // EN: Returns a generic server error response: ok=false with the serverError message.
         // NL: Geeft een algemene serverfout terug: ok=false met het bericht serverError.
-        return { ok: false, message: serverError }
+        return { ok: false, data: { message: serverError } };
     }
 }

@@ -6,6 +6,10 @@ import { pinMiddleware } from "../middleware/pin.middleware.js";
 import { pinServiceUpdate } from "../controllers/update/pin.service.js";
 import { loginControllerLayer } from "../controllers/read/login.controller.js";
 import { pinControllerLayer } from "../controllers/read/pin.controller.js";
+import { passwordController } from "../controllers/update/password.controller.js";
+import { systemMiddleware } from "../middleware/system.middleware.js";
+import { identityControllerRead } from "../controllers/read/identity.controller.js";
+import { identityControllerUpdate } from "../controllers/update/identity.controller.js";
 
 
 // RU 🔐 Маршруты аутентификации: регистрация, логин и PIN-флоу.
@@ -38,3 +42,29 @@ authRouter.get('/pin', pinControllerLayer)
 // NL ✅ POST /pin — PIN bevestigen/bijwerken; beveiligd door pinMiddleware.
 authRouter.post('/pin', pinMiddleware, pinServiceUpdate);
 
+// RU ✅ GET /life — «пульс»/keep-alive сессии; доступ только через systemMiddleware.
+//    При валидной сессии middleware сам вернёт OK и продлит TTL;
+//    при невалидной — очистит cookie и ответит 404/401.
+// EN ✅ GET /life — session heartbeat/keep-alive; guarded by systemMiddleware.
+//    On a valid session the middleware returns OK and refreshes TTL;
+//    on invalid it clears the cookie and responds 404/401.
+// NL ✅ GET /life — sessie-heartbeat/keep-alive; beveiligd door systemMiddleware.
+//    Bij een geldige sessie geeft de middleware OK terug en ververst de TTL;
+//    bij een ongeldige wist hij de cookie en geeft 404/401 terug.
+authRouter.post('/life', systemMiddleware);
+
+// RU ✅ PATCH /password — смена пароля; доступна только при валидной серверной сессии;
+// EN ✅ PATCH /password — change password; requires a valid server-side session;
+// NL ✅ PATCH /password — wachtwoord wijzigen; vereist een geldige serversessie;
+authRouter.patch('/password', systemMiddleware, passwordController);
+
+
+// RU ✅ GET /identity — чтение идентичности/профиля текущего пользователя;
+// EN ✅ GET /identity — read current user's identity/profile;
+// NL ✅ GET /identity — identiteit/profiel van de huidige gebruiker ophalen;
+authRouter.get('/identity', systemMiddleware, identityControllerRead);
+
+// RU ✅ PATCH /identity — частичное обновление идентичности/профиля.
+// EN ✅ PATCH /identity — partial update of identity/profile.
+// NL ✅ PATCH /identity — gedeeltelijke update van identiteit/profiel.
+authRouter.patch('/identity', systemMiddleware, identityControllerUpdate);

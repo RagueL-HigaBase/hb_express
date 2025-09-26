@@ -15,7 +15,7 @@ import bcrypt from "bcrypt";
  * const hash = await strinEncrypt('Pa$$w0rd');
  * @remarks RU: Для продакшена можно повысить saltRounds; EN: Consider higher saltRounds in production; NL: Overweeg hogere saltRounds in productie.
  */
-export async function strinEncrypt(password) {
+export async function stringEncrypt(password) {
     const saltRounds = 10;
     return await bcrypt.hash(password, saltRounds);
 }

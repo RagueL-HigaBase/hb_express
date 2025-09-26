@@ -15,12 +15,12 @@ export async function sessionServicePaper(session) {
         // EN: If the session is missing, return an error result: ok=false with the sessionUnexist message (early return).
         // NL: Als de sessie ontbreekt, een foutresultaat teruggeven: ok=false met het bericht sessionUnexist (vroege return).
         if (!isSession)
-            return { ok: false, message: sessionUnexist };
+            return { ok: false, data: { message: sessionUnexist } };
         // RU: Если сессия отозвана (revoked), вернуть ошибку как для несуществующей: ok=false, message=sessionUnexist.
         // EN: If the session is revoked, return an error as if it doesn’t exist: ok=false with message sessionUnexist.
         // NL: Als de sessie is ingetrokken (revoked), een fout teruggeven alsof deze niet bestaat: ok=false, bericht sessionUnexist.
         if (isSession.revoked)
-            return { ok: false, message: sessionUnexist };
+            return { ok: false, data: { message: sessionUnexist } };
         // RU: Если срок действия сессии истёк (sessionElapsed < now), помечает её revoked и revokedAt, затем возвращает { ok:false, message: sessionUnexist }.
         // EN: If the session has expired (sessionElapsed < now), sets revoked and revokedAt, then returns { ok:false, message: sessionUnexist }.
         // NL: Als de sessie is verlopen (sessionElapsed < nu), zet revoked en revokedAt en retourneert { ok:false, message: sessionUnexist }.
@@ -32,7 +32,7 @@ export async function sessionServicePaper(session) {
                     revokedAt: new Date()
                 }
             });
-            return { ok: false, message: sessionUnexist };
+            return { ok: false, data: { message: sessionUnexist } };
         }
         ;
         // RU: Успешный результат: ok=true; в data указано, что срок сессии не истёк (sessionElapsed=false).
@@ -44,7 +44,7 @@ export async function sessionServicePaper(session) {
         // RU: Возвращает общий ответ об ошибке сервера: ok=false и сообщение serverError.
         // EN: Returns a generic server error response: ok=false with the serverError message.
         // NL: Geeft een algemene serverfout terug: ok=false met het bericht serverError.
-        return { ok: false, message: serverError };
+        return { ok: false, data: { message: serverError } };
     }
 }
 //# sourceMappingURL=session.service.js.map

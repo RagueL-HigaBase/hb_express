@@ -16,7 +16,7 @@ export async function loginMiddleware(req, res, next) {
     // EN: If the session is valid, immediately respond 200 with { ok:true, message:sessionActive } and stop the chain.
     // NL: Indien de sessie geldig is, meteen 200 antwoorden met { ok:true, message:sessionActive } en de keten stoppen.
     if (r.ok)
-        return res.status(200).json({ ok: true, message: sessionActive });
+        return res.status(200).json({ ok: true, data: { sessionElapsed: r.data.sessionElapsed } });
     // RU: Если сессия невалидна — очищаем куку session (атрибуты совпадают с установкой) и передаём выполнение дальше (next()),
     // чтобы последующие миддлы/роуты решили, что вернуть (например, 401/редирект на логин).
     // EN: If the session is invalid, clear the session cookie (attributes matching how it was set) and call next(),

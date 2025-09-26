@@ -12,7 +12,7 @@ export async function pinServicePaper(session) {
         // NL: Zoek de sessie op hash; indien niet gevonden — melden dat de sessie niet bestaat.
         const s = await prisma.userSession.findUnique({ where: { id: sessionIdHash } });
         if (!s)
-            return { ok: false, message: sessionUnexist };
+            return { ok: false, data: { message: sessionUnexist } };
         // RU: Если срок сессии истёк ИЛИ она уже отозвана — помечаем revoked и возвращаем «сессии нет».
         // EN: If the session is expired OR already revoked — mark as revoked and return “no session”.
         // NL: Als de sessie is verlopen OF al ingetrokken — markeer als revoked en geef “geen sessie” terug.
@@ -24,7 +24,7 @@ export async function pinServicePaper(session) {
                 where: { id: sessionIdHash },
                 data: { revoked: true, revokedAt: new Date() }
             });
-            return { ok: false, message: sessionUnexist };
+            return { ok: false, data: { message: sessionUnexist } };
         }
         ;
         // RU: Если PIN истёк — сообщаем фронту, что требуется повторное подтверждение PIN.
@@ -41,7 +41,7 @@ export async function pinServicePaper(session) {
         // RU: Возвращает общий ответ об ошибке сервера: ok=false и сообщение serverError.
         // EN: Returns a generic server error response: ok=false with the serverError message.
         // NL: Geeft een algemene serverfout terug: ok=false met het bericht serverError.
-        return { ok: false, message: serverError };
+        return { ok: false, data: { message: serverError } };
     }
 }
 //# sourceMappingURL=pin.service.js.map

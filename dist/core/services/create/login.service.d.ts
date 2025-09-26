@@ -1,6 +1,9 @@
 import "dotenv/config";
 import type { ApiPolicy } from "../../../shared/api/policy.js";
-import type { PublicSelectUser } from "../../selects/login.select.js";
 import type { ValidateLogin } from "../../validators/login.validator.js";
-export declare function loginServiceCreate(v: ValidateLogin): Promise<ApiPolicy<PublicSelectUser>>;
+export type ReturnPolicyLoginServiceCreate = {
+    message: string;
+    token: string;
+};
+export declare function loginServiceCreate(v: ValidateLogin): Promise<ApiPolicy<ReturnPolicyLoginServiceCreate>>;
 //# sourceMappingURL=login.service.d.ts.map

@@ -16,7 +16,9 @@ export async function registerControllerCreate(req, res) {
     if (!v.success) {
         return res.status(401).json({
             ok: false,
-            message: zodError
+            data: {
+                message: zodError
+            }
         });
     }
     // RU: Создаём пользователя через сервис registerServiceCreate с проверенными данными v.data.

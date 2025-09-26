@@ -9,7 +9,7 @@
  * const hash = await strinEncrypt('Pa$$w0rd');
  * @remarks RU: Для продакшена можно повысить saltRounds; EN: Consider higher saltRounds in production; NL: Overweeg hogere saltRounds in productie.
  */
-export declare function strinEncrypt(password: string): Promise<string>;
+export declare function stringEncrypt(password: string): Promise<string>;
 /**
  * RU: Проверяет, совпадает ли открытый пароль с переданным bcrypt-хешем.
  * EN: Verifies whether a plain-text password matches the provided bcrypt hash.

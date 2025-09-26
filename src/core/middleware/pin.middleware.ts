@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { sessionActive, sessionUnexist } from "../../shared/messages/server.js";
+import { sessionUnexist } from "../../shared/messages/server.js";
 import { pinServicePaper } from "../services/paper/pin.service.js";
 import { CLEAR_COOKIE_OPTS, COOKIE_NAME } from "../../shared/config.js";
 
@@ -14,8 +14,8 @@ export async function pinMiddleware(req: Request, res: Response, next: NextFunct
     return res.status(404)                      // RU/EN/NL: статус до отправки тела / status before body
         .clearCookie(COOKIE_NAME, CLEAR_COOKIE_OPTS) // RU/EN/NL: удалить куку с совпадающими атрибутами
         .json({ 
-        ok: false, 
-        message: sessionUnexist
+            ok: false, 
+            message: sessionUnexist,
         });
     }
 
@@ -36,7 +36,7 @@ export async function pinMiddleware(req: Request, res: Response, next: NextFunct
     // EN: If the PIN is still valid — session is active, return 200 with a message.
     // NL: Als de PIN nog geldig is — sessie actief, 200 met bericht teruggeven.
     if (!r.data.pinElapsed) {
-    return res.status(200).json({ ok: true, message: sessionActive });
+    return res.status(200).json({ ok: true, data: { pinElapsed: r.data.pinElapsed} });
     }
 
     // RU: Если PIN истёк — пробрасываем идентификатор в res.locals и передаём дальше (покажет экран PIN).

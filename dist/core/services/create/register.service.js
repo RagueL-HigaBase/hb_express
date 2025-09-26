@@ -1,4 +1,4 @@
-import { strinEncrypt } from "../../../shared/cipher/string.cipher.js";
+import { stringEncrypt } from "../../../shared/cipher/string.cipher.js";
 import { prisma } from "../../../shared/lib/prisma.js";
 import { serverError, userExist } from "../../../shared/messages/server.js";
 export async function registerServiceCreate(v) {
@@ -11,12 +11,12 @@ export async function registerServiceCreate(v) {
         // EN: If the user already exists, return failure: ok=false with the userExist message — prevents duplicate sign-up.
         // NL: Als de gebruiker al bestaat, fout teruggeven: ok=false met bericht userExist — voorkomt dubbele registratie.
         if (isExist)
-            return { ok: false, message: userExist };
+            return { ok: false, data: { message: userExist } };
         // RU: Шифрует/хэширует пароль v.password; результат — строка для безопасного хранения в БД.
         // EN: Encrypts/hashes v.password; returns a string suitable for secure storage in the database.
         // NL: Versleutelt/hasht v.password; retourneert een tekenreeks voor veilige opslag in de database.
-        const encryptPassword = await strinEncrypt(v.password);
-        /**
+        const encryptPassword = await stringEncrypt(v.password);
+        /**s
          * RU: Prisma-транзакция: создаёт пользователя и связанные пустые записи
          * (identity, permanent/current address, system credentials); атомарно. Возвращает { id, email }.
          * EN: Prisma transaction: creates a user and related empty records
@@ -68,7 +68,7 @@ export async function registerServiceCreate(v) {
         // RU: Возвращает общий ответ об ошибке сервера: ok=false и сообщение serverError.
         // EN: Returns a generic server error response: ok=false with the serverError message.
         // NL: Geeft een algemene serverfout terug: ok=false met het bericht serverError.
-        return { ok: false, message: serverError };
+        return { ok: false, data: { message: serverError } };
     }
 }
 //# sourceMappingURL=register.service.js.map

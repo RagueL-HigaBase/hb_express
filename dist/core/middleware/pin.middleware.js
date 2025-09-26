@@ -1,4 +1,4 @@
-import { sessionActive, sessionUnexist } from "../../shared/messages/server.js";
+import { sessionUnexist } from "../../shared/messages/server.js";
 import { pinServicePaper } from "../services/paper/pin.service.js";
 import { CLEAR_COOKIE_OPTS, COOKIE_NAME } from "../../shared/config.js";
 export async function pinMiddleware(req, res, next) {
@@ -11,7 +11,7 @@ export async function pinMiddleware(req, res, next) {
             .clearCookie(COOKIE_NAME, CLEAR_COOKIE_OPTS) // RU/EN/NL: удалить куку с совпадающими атрибутами
             .json({
             ok: false,
-            message: sessionUnexist
+            message: sessionUnexist,
         });
     }
     // RU: Проверяем состояние PIN для текущей сессии.
@@ -29,7 +29,7 @@ export async function pinMiddleware(req, res, next) {
     // EN: If the PIN is still valid — session is active, return 200 with a message.
     // NL: Als de PIN nog geldig is — sessie actief, 200 met bericht teruggeven.
     if (!r.data.pinElapsed) {
-        return res.status(200).json({ ok: true, message: sessionActive });
+        return res.status(200).json({ ok: true, data: { pinElapsed: r.data.pinElapsed } });
     }
     // RU: Если PIN истёк — пробрасываем идентификатор в res.locals и передаём дальше (покажет экран PIN).
     // EN: If the PIN has expired — stash the id in res.locals and call next() (to show the PIN screen).

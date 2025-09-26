@@ -3,20 +3,20 @@ import { stringDecrypt } from "../../../shared/cipher/string.cipher.js";
 import { PIN_TTL_MS, SESSION_TTL_MS } from "../../../shared/config.js";
 import { prisma } from "../../../shared/lib/prisma.js";
 import { pinExtended, serverError, sessionUnexist } from "../../../shared/messages/server.js";
-import type { ServerSelectRevoke, ServerSelectExtended } from "../../selects/pin.select.js";
+export type ReturnpolicyPinServiceRevoke = { revoked: boolean };
+export type ReturnpolicyPinServiceExtend = { message: string }
 
-
-export async function pinServiceRevoke(sessionId: string): Promise<ApiPolicy<ServerSelectRevoke>> {
+export async function pinServiceRevoke(sessionId: string): Promise<ApiPolicy<ReturnpolicyPinServiceRevoke>> {
     try {
         // RU: Ищем сессию по ID; если нет — сообщаем, что сессии не существует.
         // EN: Look up the session by ID; if missing — report it does not exist.
         // NL: Zoek de sessie op ID; indien ontbreekt — meld dat deze niet bestaat.
         const f = await prisma.userSession.findUnique({ where: { id: sessionId } });
-        if (!f) return { ok: false, message: sessionUnexist };
+        if (!f) return { ok: false, data: { message: sessionUnexist } };
 
         // RU: Помечаем сессию как отозванную и фиксируем время отзыва.
         // EN: Mark the session as revoked and store the revocation timestamp.
-        // NL: Markeer de sessie als ingetrokken en sla het tijdstip op.
+        // NL: Markeer de sessie als ingetrokken en sla het tijdstip op.s
         const s = await prisma.userSession.update({
         where: { id: sessionId },
         data: {
@@ -33,13 +33,12 @@ export async function pinServiceRevoke(sessionId: string): Promise<ApiPolicy<Ser
         // RU: Возвращает общий ответ об ошибке сервера: ok=false и сообщение serverError.
         // EN: Returns a generic server error response: ok=false with the serverError message.
         // NL: Geeft een algemene serverfout terug: ok=false met het bericht serverError.
-        return { ok: false, message: serverError };
+        return { ok: false, data: { message: serverError }};
     }
 }
 
 
-
-export async function pinServiceExtend(id: string, pin: string): Promise<ApiPolicy<ServerSelectExtended>> {
+export async function pinServiceExtend(id: string, pin: string): Promise<ApiPolicy<ReturnpolicyPinServiceExtend>> {
     try {
         // RU: Ищем сессию по ID; если не найдена — сообщаем об отсутствии.
         // EN: Look up the session by ID; if not found — report it’s missing.
@@ -49,7 +48,7 @@ export async function pinServiceExtend(id: string, pin: string): Promise<ApiPoli
         // RU: Если сессия не найдена — ранний выход с ошибкой: ok=false и сообщение sessionUnexist.
         // EN: If the session is missing — early return with an error: ok=false and the sessionUnexist message.
         // NL: Als de sessie ontbreekt — vroege return met fout: ok=false en het bericht sessionUnexist.
-        if (!f) return { ok: false, message: sessionUnexist };
+        if (!f) return { ok: false, data: { message: sessionUnexist } };
 
         // RU: Сверяем введённый PIN с сохранённым bcrypt-хешем.
         // EN: Compare provided PIN with the stored bcrypt hash.
@@ -64,7 +63,7 @@ export async function pinServiceExtend(id: string, pin: string): Promise<ApiPoli
                 where: { id },
                 data: { revoked: true, revokedAt: new Date() },
             });
-            return { ok: false, message: sessionUnexist };
+            return { ok: false, data: { message: sessionUnexist } };
         }
 
         // RU: Фиксирует текущее время (timestamp) для расчётов issuedAt/истечения срока.
@@ -93,6 +92,6 @@ export async function pinServiceExtend(id: string, pin: string): Promise<ApiPoli
         // RU: Возвращает общий ответ об ошибке сервера: ok=false и сообщение serverError.
         // EN: Returns a generic server error response: ok=false with the serverError message.
         // NL: Geeft een algemene serverfout terug: ok=false met het bericht serverError.
-        return { ok: false, message: serverError };
+        return { ok: false, data: { message: serverError } };
     }
 }

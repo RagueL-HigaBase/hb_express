@@ -9,10 +9,10 @@ export async function pinServiceRevoke(sessionId) {
         // NL: Zoek de sessie op ID; indien ontbreekt — meld dat deze niet bestaat.
         const f = await prisma.userSession.findUnique({ where: { id: sessionId } });
         if (!f)
-            return { ok: false, message: sessionUnexist };
+            return { ok: false, data: { message: sessionUnexist } };
         // RU: Помечаем сессию как отозванную и фиксируем время отзыва.
         // EN: Mark the session as revoked and store the revocation timestamp.
-        // NL: Markeer de sessie als ingetrokken en sla het tijdstip op.
+        // NL: Markeer de sessie als ingetrokken en sla het tijdstip op.s
         const s = await prisma.userSession.update({
             where: { id: sessionId },
             data: {
@@ -29,7 +29,7 @@ export async function pinServiceRevoke(sessionId) {
         // RU: Возвращает общий ответ об ошибке сервера: ok=false и сообщение serverError.
         // EN: Returns a generic server error response: ok=false with the serverError message.
         // NL: Geeft een algemene serverfout terug: ok=false met het bericht serverError.
-        return { ok: false, message: serverError };
+        return { ok: false, data: { message: serverError } };
     }
 }
 export async function pinServiceExtend(id, pin) {
@@ -42,7 +42,7 @@ export async function pinServiceExtend(id, pin) {
         // EN: If the session is missing — early return with an error: ok=false and the sessionUnexist message.
         // NL: Als de sessie ontbreekt — vroege return met fout: ok=false en het bericht sessionUnexist.
         if (!f)
-            return { ok: false, message: sessionUnexist };
+            return { ok: false, data: { message: sessionUnexist } };
         // RU: Сверяем введённый PIN с сохранённым bcrypt-хешем.
         // EN: Compare provided PIN with the stored bcrypt hash.
         // NL: Vergelijk de ingevoerde PIN met de opgeslagen bcrypt-hash.
@@ -55,7 +55,7 @@ export async function pinServiceExtend(id, pin) {
                 where: { id },
                 data: { revoked: true, revokedAt: new Date() },
             });
-            return { ok: false, message: sessionUnexist };
+            return { ok: false, data: { message: sessionUnexist } };
         }
         // RU: Фиксирует текущее время (timestamp) для расчётов issuedAt/истечения срока.
         // EN: Captures the current timestamp for issuedAt/expiry calculations.
@@ -81,7 +81,7 @@ export async function pinServiceExtend(id, pin) {
         // RU: Возвращает общий ответ об ошибке сервера: ok=false и сообщение serverError.
         // EN: Returns a generic server error response: ok=false with the serverError message.
         // NL: Geeft een algemene serverfout terug: ok=false met het bericht serverError.
-        return { ok: false, message: serverError };
+        return { ok: false, data: { message: serverError } };
     }
 }
 //# sourceMappingURL=pin.service.js.map

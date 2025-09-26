@@ -1,11 +1,11 @@
 import type { ApiPolicy } from "../../../shared/api/policy.js";
-import { strinEncrypt } from "../../../shared/cipher/string.cipher.js";
+import { stringEncrypt } from "../../../shared/cipher/string.cipher.js";
 import { prisma } from "../../../shared/lib/prisma.js";
 import type { RegisterValidator } from "../../validators/register.validator.js";
-import type { PublicSelectRegister } from "../../selects/register.select.js";
 import { serverError, userExist } from "../../../shared/messages/server.js";
+export type ReturnPolicyRegisterServiceCreate = { email: string }
 
-export async function registerServiceCreate(v: RegisterValidator): Promise<ApiPolicy<PublicSelectRegister>> {
+export async function registerServiceCreate(v: RegisterValidator): Promise<ApiPolicy<ReturnPolicyRegisterServiceCreate>> {
     try {
 
         // RU: Асинхронно ищет пользователя по уникальному email через Prisma; вернёт объект пользователя или null.
@@ -16,14 +16,14 @@ export async function registerServiceCreate(v: RegisterValidator): Promise<ApiPo
         // RU: Если пользователь уже существует, вернуть неуспех: ok=false с сообщением userExist — предотвращает дублирование регистрации.
         // EN: If the user already exists, return failure: ok=false with the userExist message — prevents duplicate sign-up.
         // NL: Als de gebruiker al bestaat, fout teruggeven: ok=false met bericht userExist — voorkomt dubbele registratie.
-        if (isExist) return { ok:false, message: userExist };
+        if (isExist) return { ok: false, data: { message: userExist}};
 
         // RU: Шифрует/хэширует пароль v.password; результат — строка для безопасного хранения в БД.
         // EN: Encrypts/hashes v.password; returns a string suitable for secure storage in the database.
         // NL: Versleutelt/hasht v.password; retourneert een tekenreeks voor veilige opslag in de database.
-        const encryptPassword = await strinEncrypt(v.password);
+        const encryptPassword = await stringEncrypt(v.password);
         
-        /**
+        /**s
          * RU: Prisma-транзакция: создаёт пользователя и связанные пустые записи
          * (identity, permanent/current address, system credentials); атомарно. Возвращает { id, email }.
          * EN: Prisma transaction: creates a user and related empty records
@@ -80,6 +80,6 @@ export async function registerServiceCreate(v: RegisterValidator): Promise<ApiPo
         // RU: Возвращает общий ответ об ошибке сервера: ok=false и сообщение serverError.
         // EN: Returns a generic server error response: ok=false with the serverError message.
         // NL: Geeft een algemene serverfout terug: ok=false met het bericht serverError.
-        return { ok: false, message: serverError}
+        return { ok: false, data: { message: serverError}};
     }
 }
