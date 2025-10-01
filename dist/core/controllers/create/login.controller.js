@@ -22,6 +22,7 @@ export async function loginControllerCreate(req, res) {
     // EN: Attempt authentication via loginServiceCreate (checks email/password/PIN).
     // NL: Authenticeer via loginServiceCreate (controleert email/wachtwoord/PIN).
     const isExist = await loginServiceCreate(v.data);
+    console.log(isExist);
     // RU: Если сервис вернул неуспех — 401 и тело ошибки isExist (неверные данные/аккаунт).
     // EN: If the service fails — return 401 with error payload isExist (invalid credentials/account).
     // NL: Bij falen van de service — 401 met foutpayload isExist (ongeldige gegevens/account).
@@ -32,7 +33,7 @@ export async function loginControllerCreate(req, res) {
     // RU: При успехе — ставим httpOnly-куку session с токеном и отвечаем 201 с данными isExist.
     // EN: On success — set an httpOnly session cookie with the token and respond 201 with isExist data.
     // NL: Bij succes — zet een httpOnly session-cookie met de token en antwoord 201 met isExist-gegevens.
-    return res.status(200)
+    return res.status(201)
         .cookie(COOKIE_NAME, isExist.data.token, SET_COOKIE_OPTS)
         .json({ ok: isExist.ok, data: {
             message: isExist.data.message

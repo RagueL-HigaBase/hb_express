@@ -1,10 +1,10 @@
 import { GENDER } from "@prisma/client";
 import z from "zod";
 export const countrySchema = z.object({
-    country: z.string().optional(),
-    alpha2: z.string().optional(),
-    alpha3: z.string().optional(),
-    numeric: z.string().optional(),
+    country: z.string(),
+    alpha2: z.string(),
+    alpha3: z.string(),
+    numeric: z.string(),
 });
 export const identityValidator = z.object({
     firstName: z.string().min(1).max(50).optional(),

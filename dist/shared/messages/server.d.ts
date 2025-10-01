@@ -1,4 +1,4 @@
-export declare const userExist = "system.varning.exist";
+export declare const userExist = "system.warning.exist";
 export declare const sessionNotExist = "system.session.noexist";
 export declare const userNotExist = "system.varning.notexist";
 export declare const passNotMatch = "system.varning.password";

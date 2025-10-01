@@ -1,5 +1,4 @@
 import { sessionServicePaper } from "../services/paper/session.service.js";
-import { sessionActive } from "../../shared/messages/server.js";
 import { CLEAR_COOKIE_OPTS, COOKIE_NAME } from "../../shared/config.js";
 export async function loginMiddleware(req, res, next) {
     const { session } = req.cookies;
@@ -12,6 +11,7 @@ export async function loginMiddleware(req, res, next) {
     // EN: Validates the session via sessionServicePaper(session) (DB/validation).
     // NL: Valideert de sessie via sessionServicePaper(session) (DB/validatie).
     const r = await sessionServicePaper(session);
+    console.log(r);
     // RU: Если сессия валидна — немедленно отвечаем 200 с { ok:true, message:sessionActive } и прерываем цепочку.
     // EN: If the session is valid, immediately respond 200 with { ok:true, message:sessionActive } and stop the chain.
     // NL: Indien de sessie geldig is, meteen 200 antwoorden met { ok:true, message:sessionActive } en de keten stoppen.

@@ -29,7 +29,7 @@ export async function registerControllerCreate(req: Request, res: Response) {
     // EN: Create the user via registerServiceCreate using validated data v.data.
     // NL: Maakt de gebruiker aan via registerServiceCreate met gevalideerde data v.data.
     const p = await registerServiceCreate(v.data);
-
+    console.log(p)
     // RU: Если сервис вернул неуспех — 401 с телом ошибки p.
     // EN: If the service fails — return 401 with error payload p.
     // NL: Als de service faalt — 401 met foutpayload p.

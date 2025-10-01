@@ -1,9 +1,9 @@
 import z from "zod";
 export declare const countrySchema: z.ZodObject<{
-    country: z.ZodOptional<z.ZodString>;
-    alpha2: z.ZodOptional<z.ZodString>;
-    alpha3: z.ZodOptional<z.ZodString>;
-    numeric: z.ZodOptional<z.ZodString>;
+    country: z.ZodString;
+    alpha2: z.ZodString;
+    alpha3: z.ZodString;
+    numeric: z.ZodString;
 }, z.z.core.$strip>;
 export declare const identityValidator: z.ZodObject<{
     firstName: z.ZodOptional<z.ZodString>;
@@ -16,16 +16,16 @@ export declare const identityValidator: z.ZodObject<{
     }>>;
     birthDate: z.ZodOptional<z.ZodDate>;
     nationality: z.ZodOptional<z.ZodObject<{
-        country: z.ZodOptional<z.ZodString>;
-        alpha2: z.ZodOptional<z.ZodString>;
-        alpha3: z.ZodOptional<z.ZodString>;
-        numeric: z.ZodOptional<z.ZodString>;
+        country: z.ZodString;
+        alpha2: z.ZodString;
+        alpha3: z.ZodString;
+        numeric: z.ZodString;
     }, z.z.core.$strip>>;
     placeOfBirth: z.ZodOptional<z.ZodObject<{
-        country: z.ZodOptional<z.ZodString>;
-        alpha2: z.ZodOptional<z.ZodString>;
-        alpha3: z.ZodOptional<z.ZodString>;
-        numeric: z.ZodOptional<z.ZodString>;
+        country: z.ZodString;
+        alpha2: z.ZodString;
+        alpha3: z.ZodString;
+        numeric: z.ZodString;
     }, z.z.core.$strip>>;
     updated: z.ZodDate;
 }, z.z.core.$strip>;
