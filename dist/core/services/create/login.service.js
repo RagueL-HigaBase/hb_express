@@ -14,7 +14,7 @@ export async function loginServiceCreate(v) {
         // EN: If no user is found — return error userNotExist (early return).
         // NL: Als geen gebruiker is gevonden — fout userNotExist teruggeven (vroege return).
         if (!isExist)
-            return { ok: false, data: { message: userNotExist } };
+            return { ok: false, data: { message: userNotExist, reason: "test" } };
         // RU: Сравниваем введённый пароль с bcrypt-хешем из БД (stringDecrypt → compare).
         // EN: Compare the supplied password with the stored bcrypt hash (stringDecrypt → compare).
         // NL: Vergelijk het ingevoerde wachtwoord met de opgeslagen bcrypt-hash (stringDecrypt → compare).

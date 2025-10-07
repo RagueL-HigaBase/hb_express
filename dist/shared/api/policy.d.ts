@@ -2,6 +2,7 @@ export type ErrorPolicy = {
     ok: false;
     data: {
         message: string;
+        reason?: string;
     };
 };
 export type SuccessPolicy<T> = {

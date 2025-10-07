@@ -14,12 +14,13 @@ export async function loginControllerLayer(req, res) {
     // NL: Leest de httpOnly session-cookie; ontbreekt of geen string, wist hem (maxAge:0, secure, sameSite:lax, path:/) en geeft 200 { ok:false, message:sessionUnexist }.
     if (!session || typeof session !== 'string') {
         res.clearCookie(COOKIE_NAME, CLEAR_COOKIE_OPTS);
-        return res.status(400).json({ ok: false, message: sessionUnexist });
+        return res.status(400).json({ ok: false, message: sessionUnexist, reason: "test from reasone" });
     }
     // RU: Затем вызывает sessionServicePaper(session) для проверки/поиска сессии в БД/сервисе.
     // EN: Then calls sessionServicePaper(session) to validate/lookup the session in the DB/service.
     // NL: Roept vervolgens sessionServicePaper(session) aan om de sessie te valideren/op te zoeken in de DB/service.
     const r = await sessionServicePaper(session);
+    console.log(r);
     // RU: Если сервис вернул неуспех (!r.ok) — чистит куку и отвечает 404 с телом r (например, сессия не найдена/протухла).
     // EN: If the service fails (!r.ok), clears the cookie and responds 404 with payload r (e.g., session not found/expired).
     // NL: Bij falen van de service (!r.ok), cookie wissen en 404 met payload r (bijv. sessie niet gevonden/verlopen).

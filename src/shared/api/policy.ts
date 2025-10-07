@@ -1,4 +1,4 @@
-export type ErrorPolicy = { ok: false, data: { message: string }};
+export type ErrorPolicy = { ok: false, data: { message: string, reason?: string }};
 
 export type SuccessPolicy<T> = { ok: true, data: T };
 
